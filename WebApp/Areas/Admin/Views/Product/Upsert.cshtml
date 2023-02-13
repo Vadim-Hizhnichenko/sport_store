@@ -1,0 +1,120 @@
+﻿@using Data.Enums
+@model ProductViewModel
+
+<form method="post" enctype="multipart/form-data">
+    <input asp-for="Product.Id" hidden />
+    <input asp-for="Product.ImageUrl" hidden />
+
+    <div class="row">
+        <div class="col-10">
+            <div class="border p-3 mt-4 row">
+                <div class="col-12 pb-2">
+                    <h2 class="text-primary">@(Model.Product.Id != 0 ? "Update" : "Create") Product</h2>
+                    <hr />
+
+                    <div class="mb-3">
+                        <label asp-for="Product.Name"></label>
+                        <input asp-for="Product.Name" class="form-control" />
+                        <span asp-validation-for="Product.Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Product.Description"></label>
+                        <textarea asp-for="Product.Description" rows="4" class="form-control"></textarea>
+                        <span asp-validation-for="Product.Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 col-6">
+                        <label asp-for="Product.Size"></label>
+                        <select asp-for="Product.Size" class="form-select" asp-items="Html.GetEnumSelectList<SizeType>()">
+                            <option disabled selected>Please select</option>
+                        </select>
+                        <span asp-validation-for="Product.Size" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 col-6">
+                        <label asp-for="Product.Brend"></label>
+                        <input asp-for="Product.Brend" class="form-control" />
+                        <span asp-validation-for="Product.Brend" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 col-6">
+                        <label asp-for="Product.Price"></label>
+                        <input asp-for="Product.Price" class="form-control" />
+                        <span asp-validation-for="Product.Price" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 col-6">
+                        <label asp-for="Product.CategoryId"></label>
+                        <select asp-for="Product.CategoryId" class="form-select" asp-items="@Model.CategorySelectItems">
+                            <option disabled selected>Please select</option>
+                        </select>
+                        <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 col-6">
+                        <label asp-for="Product.ImageUrl"></label>
+                        <input type="file" id="uploadFile" name="file" class="form-control" />
+                        <span asp-validation-for="Product.ImageUrl" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-12">
+                        @if (Model.Product.Id != 0)
+                        {
+                            <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
+                        }
+                        else
+                        {
+                            <button type="submit" onclick="return ValidateInputFile()" class="btn btn-primary" style="width:150px">Create</button>
+                        }
+                        <a asp-controller="Product" asp-action="Index" class="btn btn-secondary" style="width:150px">Back</a>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-2 pt-4">
+            <img src="@Url.Content(Model.Product.ImageUrl)" width="150%" style="border-radius:5px; border:1px solid #000000;" />
+        </div>
+
+    </div>
+
+
+</form>
+
+@section Scripts{
+    @{
+    <partial name="_ValidationScriptsPartial" />
+    }
+    <script>
+        function ValidateInputFile() {
+            if (document.getElementById("uploadFile").value == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please upload product image!'
+                });
+                return false;
+            }
+            return true;
+        }
+    </script>
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+            mergetags_list: [
+                { value: 'First.Name', title: 'First Name' },
+                { value: 'Email', title: 'Email' },
+            ]
+        });
+    </script>
+}
+
+
